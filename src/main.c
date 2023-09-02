@@ -37,6 +37,7 @@ int main(void) {
             }
         }
 
+        DrawFPS(10, 10);
         grid_run_gol_step(gr);
         EndDrawing();
     }
