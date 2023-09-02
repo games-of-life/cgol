@@ -1,20 +1,20 @@
 #include "grid.h"
 #include "raylib.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <stdio.h>
 
 #define WIDTH 800
 #define HEIGHT 600
 
-#define BOX_DIMENSION 10
+#define BOX_DIMENSION 2
 
 int main(void) {
     srand(1);
 
     InitWindow(WIDTH, HEIGHT, "Game of life");
 
-    SetTargetFPS(60);
+    SetTargetFPS(30);
 
     const uint box_width = WIDTH / BOX_DIMENSION;
     const uint box_height = HEIGHT / BOX_DIMENSION;
@@ -23,7 +23,6 @@ int main(void) {
 
     grid_init(&gr, box_width, box_height);
     grid_noise(gr, 0.5);
-    // grid_cycle(gr);
 
     while (!WindowShouldClose()) {
         BeginDrawing();
