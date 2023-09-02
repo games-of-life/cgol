@@ -30,17 +30,6 @@ void grid_noise(grid *gr, float prob) {
     }
 }
 
-void grid_cycle(grid *gr) {
-    memset(gr->field, dead, gr->width * gr->height);
-    uint x = gr->width / 2, y = gr->height / 2;
-    printf("%d %d\n", x, y);
-    set(gr, x, y, alive);
-    set(gr, x + 1, y, alive);
-    set(gr, x - 1, y, alive);
-    // set(gr, x + 1, y, alive);
-    // set(gr, x + 1, y + 1, alive);
-}
-
 int grid_calc_neighbors(grid *gr, int i, int j) {
     int i_cor, j_cor, count = 0;
     for (i_cor = i - 1; i_cor <= i + 1; i_cor++) {
