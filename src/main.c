@@ -7,10 +7,10 @@
 #define WIDTH 800
 #define HEIGHT 600
 
-#define BOX_DIMENSION 2
+#define BOX_DIMENSION 10
 
 int main(void) {
-    srand(1);
+    srand(time(NULL));
 
     InitWindow(WIDTH, HEIGHT, "Game of life");
 
