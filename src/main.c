@@ -36,9 +36,8 @@ int main(void) {
                               get(gr, i, j) ? WHITE : BLACK);
             }
         }
+
         grid_run_gol_step(gr);
-        // break;
-        // puts("another iteration");
         EndDrawing();
     }
 

@@ -3,42 +3,84 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * @brief Allocate memory for the grid, Set Width and Height
+ *
+ * @param gr Grid pointer
+ * @param width Width of the grid
+ * @param height Height of the grid
+ */
 void grid_init(grid **gr, uint width, uint height) {
     *gr = (grid *)malloc(sizeof(grid));
     (*gr)->width = width;
     (*gr)->height = height;
-    (*gr)->field = (uint *)malloc(sizeof(uint) * (*gr)->width * (*gr)->height);
+    (*gr)->field =
+        (CellState *)malloc(sizeof(CellState) * (*gr)->width * (*gr)->height);
 }
 
-int get(grid *gr, uint i, uint j) { return gr->field[i * gr->height + j]; }
+/**
+ * @brief Get the state of a cell in grid gr at coordinates i, j
+ *
+ * @param gr Grid to get coords out of
+ * @param i x coordinate
+ * @param j y coordinate
+ * @return CellState State of the cell at i, j in grid
+ */
+CellState get(grid *gr, uint i, uint j) {
+    return gr->field[i * gr->height + j];
+}
 
-void set(grid *gr, uint i, uint j, uint val) {
+/**
+ * @brief Set the state of a cell in grid at coordinates i, j
+ *
+ * @param gr Grid to get coords out of
+ * @param i x coordinate
+ * @param j y coordinate
+ * @param val CellState to set cell to
+ */
+void set(grid *gr, uint i, uint j, CellState val) {
     gr->field[i * gr->height + j] = val;
 }
 
-void grid_free(grid *gr) { free(gr); }
+/**
+ * @brief Free the memory allocated for grid gr.
+ *
+ * @param gr grid to free
+ */
+void grid_free(grid *gr) {
+    free(gr->field);
+    free(gr);
+}
 
+/**
+ * @brief Put noise into a grids field
+ *
+ * @param gr Grid to apply noise to
+ * @param prob Probability of a cell becoming alive.
+ */
 void grid_noise(grid *gr, float prob) {
     for (uint i = 0; i < gr->width; ++i) {
         for (uint j = 0; j < gr->height; ++j) {
-            if ((rand() % 100) / 100. < prob) {
-                set(gr, i, j, alive);
-            } else {
-                set(gr, i, j, dead);
-            }
+            set(gr, i, j, ((rand() % 100) / 100. < prob) ? alive : dead);
         }
     }
 }
 
-int grid_calc_neighbors(grid *gr, int i, int j) {
-    int i_cor, j_cor, count = 0;
-    for (i_cor = i - 1; i_cor <= i + 1; i_cor++) {
-        for (j_cor = j - 1; j_cor <= j + 1; j_cor++) {
-            if ((i_cor == i && j_cor == j) || (i_cor < 0 || j_cor < 0) ||
-                (i_cor >= gr->width || j_cor >= gr->height)) {
-                continue;
-            }
-            if (get(gr, i_cor, j_cor) == alive) {
+/**
+ * @brief Calculate amount of alive neighbors of a cell in grid C
+ *
+ * @param gr Grid to calculate neighbors in
+ * @param i x coordinate
+ * @param j y coordinate
+ * @return uint Amount of neighbors of point at coordinates i, j
+ */
+uint grid_calc_neighbors(grid *gr, uint i, uint j) {
+    uint count = 0;
+    for (long i_cor = i - 1; i_cor <= i + 1; i_cor++) {
+        for (long j_cor = j - 1; j_cor <= j + 1; j_cor++) {
+            if (!((i_cor == i && j_cor == j) || (i_cor < 0 || j_cor < 0) ||
+                  (i_cor >= gr->width || j_cor >= gr->height)) &&
+                (alive == get(gr, i_cor, j_cor))) {
                 count++;
             }
         }
@@ -46,20 +88,27 @@ int grid_calc_neighbors(grid *gr, int i, int j) {
     return count;
 }
 
+/**
+ * @brief Progress Game Of Life
+ *
+ * @param gr Grid to have game processed in
+ */
 void grid_run_gol_step(grid *gr) {
-    uint *field_copy = (uint *)malloc(sizeof(uint) * gr->width * gr->height);
+    CellState *field_copy =
+        (CellState *)malloc(sizeof(CellState) * gr->width * gr->height);
+
     for (uint i = 0; i < gr->width; ++i) {
         for (uint j = 0; j < gr->height; ++j) {
-            int neigh = grid_calc_neighbors(gr, i, j);
-            if (get(gr, i, j) == alive && (neigh == 2 || neigh == 3)) {
-                field_copy[i * gr->height + j] = alive;
-            } else if (get(gr, i, j) == dead && neigh == 3) {
+            uint neigh = grid_calc_neighbors(gr, i, j);
+            if ((alive == get(gr, i, j) && (2 == neigh || 3 == neigh)) ||
+                (dead == get(gr, i, j) && 3 == neigh)) {
                 field_copy[i * gr->height + j] = alive;
             } else {
                 field_copy[i * gr->height + j] = dead;
             }
         }
     }
+
     free(gr->field);
     gr->field = field_copy;
 }
