@@ -4,18 +4,22 @@
 #include <string.h>
 
 /**
- * @brief Allocate memory for the grid, Set Width and Height
+ * @brief Allocate memory for the grid, Set Width and Height. Each cell is allovated according to prob
  *
  * @param gr Grid pointer
  * @param width Width of the grid
  * @param height Height of the grid
+ * @param prob Probability of a cell being alive
  */
-void grid_init(grid **gr, uint width, uint height) {
+void grid_init_random(grid **gr, uint width, uint height, float prob) {
     *gr = (grid *)malloc(sizeof(grid));
     (*gr)->width = width;
     (*gr)->height = height;
     (*gr)->field =
         (CellState *)malloc(sizeof(CellState) * (*gr)->width * (*gr)->height);
+    for (uint i = 0; i < width*height; ++i) {
+        (*gr)->field[i] = ((rand() % 100) / 100. < prob) ? alive : dead;
+    }
 }
 
 /**
@@ -50,20 +54,6 @@ void set(grid *gr, uint i, uint j, CellState val) {
 void grid_free(grid *gr) {
     free(gr->field);
     free(gr);
-}
-
-/**
- * @brief Put noise into a grids field
- *
- * @param gr Grid to apply noise to
- * @param prob Probability of a cell becoming alive.
- */
-void grid_noise(grid *gr, float prob) {
-    for (uint i = 0; i < gr->width; ++i) {
-        for (uint j = 0; j < gr->height; ++j) {
-            set(gr, i, j, ((rand() % 100) / 100. < prob) ? alive : dead);
-        }
-    }
 }
 
 /**

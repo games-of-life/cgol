@@ -21,8 +21,8 @@ int main(void) {
 
     grid *gr;
 
-    grid_init(&gr, box_width, box_height);
-    grid_noise(gr, 0.5);
+    grid_init_random(&gr, box_width, box_height, 0.5);
+    // grid_noise(gr, 0.5);
 
     while (!WindowShouldClose()) {
         BeginDrawing();

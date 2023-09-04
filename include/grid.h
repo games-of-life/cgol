@@ -19,12 +19,10 @@ typedef struct {
     CellState *field;
 } grid;
 
-void grid_init(grid **gr, uint width, uint height);
+void grid_init_random(grid **gr, uint width, uint height, float prob);
 CellState get(grid *gr, uint i, uint j);
 void set(grid *gr, uint i, uint j, CellState val);
 void grid_free(grid *gr);
-void grid_noise(grid *gr, float prob);
-void grid_cycle(grid *gr);
 void grid_run_gol_step(grid *gr);
 
 #endif
