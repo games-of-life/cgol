@@ -1,27 +1,19 @@
 #ifndef GRID_H_
 #define GRID_H_
 
-typedef unsigned int uint;
+#include <stdint.h>
 
-/**
- * @brief Type for cell state
- * 
- */
-typedef enum { dead = 0, alive = 1 } CellState;
+typedef enum { Dead = 0, Alive = 1 } CellState;
 
-/**
- * @brief Grid of the game: dimensions and contents of the field
- * 
- */
 typedef struct {
-    uint width;
-    uint height;
+    uint64_t width;
+    uint64_t height;
     CellState *field;
 } grid;
 
-void grid_init_random(grid **gr, uint width, uint height, float prob);
-CellState get(grid *gr, uint i, uint j);
-void set(grid *gr, uint i, uint j, CellState val);
+void grid_init_random(grid **gr, uint64_t width, uint64_t height, float prob);
+CellState get(grid *gr, uint64_t i, uint64_t j);
+void set(grid *gr, uint64_t i, uint64_t j, CellState val);
 void grid_free(grid *gr);
 void grid_run_gol_step(grid *gr);
 
