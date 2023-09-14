@@ -13,7 +13,7 @@ int main(void) {
 
     InitWindow(WIDTH, HEIGHT, "Game of life");
 
-    SetTargetFPS(30);
+    // SetTargetFPS(30);
 
     const uint box_width = WIDTH / BOX_DIMENSION;
     const uint box_height = HEIGHT / BOX_DIMENSION;
